@@ -1,0 +1,5 @@
+ig_dummy_users
+node_modules
+service_account.json
+.env
+logs
