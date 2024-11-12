@@ -1,5 +1,6 @@
 const sqlite3 = require('sqlite3').verbose();
 const { dbPath } = require('./../config')
+const { initDB } = require('./init')
 
 const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
