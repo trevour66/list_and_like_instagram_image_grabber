@@ -89,7 +89,13 @@ A web scraper built with JavaScript that utilizes Selenium WebDriver (ChromeDriv
    -  **`password`**: Password associated with the Instagram account.
    -  **`cookies`**: Array of cookie objects to simulate authenticated access to Instagram.
 
-5. Run the application:
+5. Initialize the SQLite database used to gaurd against overlapping processes
+
+   ```bash
+   node database/init.js
+   ```
+
+6. Run the application:
    ```bash
    node index.js
    ```

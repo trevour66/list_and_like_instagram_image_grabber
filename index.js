@@ -2,6 +2,7 @@ const { fetchImages } = require('./fetchImages')
 const { imageProcessor } = require('./imageProcessor')
 const { is_function_running, updateFunctionStatus } = require('./database/index')
 const { logger } = require('./config')
+
 const fs = require('fs');
 const path = require('path');
 
