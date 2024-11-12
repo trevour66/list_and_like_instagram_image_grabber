@@ -5,6 +5,11 @@ const { Storage } = require('@google-cloud/storage');
 const { savePublicURL } = require('./getPostData')
 const { logger } = require('./config')
 
+require('dotenv').config();
+
+const COMPRESSED_FOLDER = process.env.COMPRESSED_FOLDER;
+const RAW_FOLDER = process.env.RAW_FOLDER;
+
 const storage = new Storage({
     keyFilename: "service_account.json",
 });
@@ -34,8 +39,8 @@ function compressImagesPromise(inputPath, outputPath) {
 
 const imageProcessor = async () => {
     try {
-        const INPUT_path_to_your_images = "raw/*.{jpg,JPG,jpeg,JPEG,png,svg,gif}";
-        const OUTPUT_path = "compressed/";
+        const INPUT_path_to_your_images = `${RAW_FOLDER}/*.{jpg,JPG,jpeg,JPEG,png,svg,gif}`;
+        const OUTPUT_path = `${COMPRESSED_FOLDER}/`;
     
         let proceedToSaving = await compressImagesPromise(INPUT_path_to_your_images, OUTPUT_path)
     
@@ -127,7 +132,7 @@ const saveFiles = async () => {
                         console.error(`Error deleting file ${file}:`, err);
 
                     } else {
-                      console.log(`Successfully deleted local file: ${file}`);
+                    //   console.log(`Successfully deleted local file: ${file}`);
                     }
                 });
     

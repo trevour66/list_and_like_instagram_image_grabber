@@ -6,6 +6,7 @@ const {
 } = require('./ig_dummy_users/listandlike_1')
 const {run} = require('./getPostData')
 const fs = require('fs');
+const path = require('path');
 const chrome = require('selenium-webdriver/chrome');
 const { logger } = require('./config')
 
@@ -74,6 +75,7 @@ const getImage = async () => {
     await waitFewSeconds(2000)
 
     try{
+      const rawDirectoryPath = path.join(__dirname, 'raw');
       
       counter++
   
@@ -98,12 +100,15 @@ const getImage = async () => {
         ctx.drawImage(img, 0, 0);
         return canvas.toDataURL('image/jpeg').split(',')[1];  // Get base64 content after the 'data:image/jpeg;base64,' prefix
       `);
-  
+
+      console.log(rawDirectoryPath)
+      
       // Step 4: Convert the Base64 string back to binary and save locally
-      fs.writeFileSync(`raw/${imageName}.jpg`, base64Image, 'base64');
+      fs.writeFileSync(`${rawDirectoryPath}/${imageName}.jpg`, base64Image, 'base64');
+      console.log(rawDirectoryPath)
   
-      console.log(`Image saved as "raw/${imageName}.jpg".`); 
-      logger.info(`Image saved as "raw/${imageName}.jpg".`, {timestamp: new Date().toLocaleString()})
+      console.log(`Image saved as "${rawDirectoryPath}/${imageName}.jpg".`); 
+      logger.info(`Image saved as "${rawDirectoryPath}/${imageName}.jpg".`, {timestamp: new Date().toLocaleString()})
 
     }catch(e){
       console.log(e.message)
