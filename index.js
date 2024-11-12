@@ -48,7 +48,7 @@ const run_process = async () => {
         console.log(`Error ${error.message}`)
         logger.error(error.message, {timestamp: new Date().toLocaleString()})
         
-        process.exit(1);
+        process.exit(0);
     }
     
 }
