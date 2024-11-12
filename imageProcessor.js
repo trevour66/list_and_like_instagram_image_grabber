@@ -9,9 +9,10 @@ require('dotenv').config();
 
 const COMPRESSED_FOLDER = process.env.COMPRESSED_FOLDER;
 const RAW_FOLDER = process.env.RAW_FOLDER;
+const SERVICE_ACCOUNT_PATH = process.env.SERVICE_ACCOUNT_PATH;
 
 const storage = new Storage({
-    keyFilename: "service_account.json",
+    keyFilename: SERVICE_ACCOUNT_PATH,
 });
 const bucketName = 'like_and_share_ig_post_images';
 
