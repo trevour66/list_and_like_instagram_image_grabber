@@ -15,7 +15,7 @@ let driver = null
 const fetchImages = async () => {
   try {
     let options = new chrome.Options()
-    options.addArguments('--headless=new')
+    // options.addArguments('--headless=new')
     
     driver = await new Builder().forBrowser(Browser.CHROME).setChromeOptions(options).build()
 

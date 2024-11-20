@@ -1,0 +1,7 @@
+File from: [/Users/mac/Projects/Jordan/instagram-image-grabber/raw/*.{jpg,JPG,jpeg,JPEG,png,svg,gif}]
+
+File to: [-]
+
+Compression algorithm: [-]
+
+Description:  Directory is empty!: 
