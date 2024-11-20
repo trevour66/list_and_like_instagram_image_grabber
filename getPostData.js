@@ -19,7 +19,7 @@ async function run() {
             { image_cdn: '' }
         ]
     };
-    const post = ig_profile_posts.find(query).limit(300);
+    const post = ig_profile_posts.find(query).limit(250);
 
     return post
 
