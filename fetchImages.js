@@ -4,7 +4,7 @@ const {
   password,
   cookies
 } = require('./ig_dummy_users/listandlike_1')
-const {run} = require('./getPostData')
+const {run, recordErrorFetchingImage} = require('./getPostData')
 const fs = require('fs');
 const path = require('path');
 const chrome = require('selenium-webdriver/chrome');
@@ -15,7 +15,7 @@ let driver = null
 const fetchImages = async () => {
   try {
     let options = new chrome.Options()
-    options.addArguments('--headless=new')
+    // options.addArguments('--headless=new')
     
     driver = await new Builder().forBrowser(Browser.CHROME).setChromeOptions(options).build()
 
@@ -81,6 +81,10 @@ const getImage = async () => {
   
       let imgURL = doc.displayUrl
       let post_id = doc.post_id
+      let error_current_count = doc?.error_current_count ?? 0
+
+      console.log('error_current_count')
+      console.log(error_current_count)
   
       let imageName = `img___${post_id}`
   
@@ -89,26 +93,34 @@ const getImage = async () => {
       let tabs = await driver.getAllWindowHandles();
   
       await driver.switchTo().window(tabs[tabs.length - 1]);
-      await driver.get(imgURL);
-  
-      let base64Image = await driver.executeScript(`
-        let img = document.querySelector('img');
-        let canvas = document.createElement('canvas');
-        canvas.width = img.naturalWidth;
-        canvas.height = img.naturalHeight;
-        let ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0);
-        return canvas.toDataURL('image/jpeg').split(',')[1];  // Get base64 content after the 'data:image/jpeg;base64,' prefix
-      `);
 
-      console.log(rawDirectoryPath)
-      
-      // Step 4: Convert the Base64 string back to binary and save locally
-      fs.writeFileSync(`${rawDirectoryPath}/${imageName}.jpg`, base64Image, 'base64');
-      console.log(rawDirectoryPath)
+      await driver.get(imgURL).then(async (e) => {
+
+        let base64Image = await driver.executeScript(`
+          let img = document.querySelector('img');
+          let canvas = document.createElement('canvas');
+          canvas.width = img.naturalWidth;
+          canvas.height = img.naturalHeight;
+          let ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0);
+          return canvas.toDataURL('image/jpeg').split(',')[1];  // Get base64 content after the 'data:image/jpeg;base64,' prefix
+        `);
   
-      console.log(`Image saved as "${rawDirectoryPath}/${imageName}.jpg".`); 
-      logger.info(`Image saved as "${rawDirectoryPath}/${imageName}.jpg".`, {timestamp: new Date().toLocaleString()})
+        console.log(rawDirectoryPath)
+        
+        // Step 4: Convert the Base64 string back to binary and save locally
+        fs.writeFileSync(`${rawDirectoryPath}/${imageName}.jpg`, base64Image, 'base64');
+        console.log(rawDirectoryPath)
+    
+        console.log(`Image saved as "${rawDirectoryPath}/${imageName}.jpg".`); 
+        logger.info(`Image saved as "${rawDirectoryPath}/${imageName}.jpg".`, {timestamp: new Date().toLocaleString()})
+      }).catch(async (e) => {
+        error_current_count = Number(error_current_count) + 1
+        await recordErrorFetchingImage(post_id, error_current_count)
+
+        console.log('error fetching image')
+      });
+  
 
     }catch(e){
       console.log(e.message)
